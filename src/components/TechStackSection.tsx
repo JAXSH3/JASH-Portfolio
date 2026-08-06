@@ -102,8 +102,8 @@ function VelocityText({ children, baseVelocity = 100, numCopies = 6 }: VelocityT
   }
 
   return (
-    <div className="relative overflow-hidden w-full py-2">
-      <motion.div className="flex whitespace-nowrap" style={{ x }}>
+    <div className="relative overflow-hidden w-full py-2 gpu-layer">
+      <motion.div className="flex whitespace-nowrap gpu-layer" style={{ x }}>
         {spans}
       </motion.div>
     </div>
@@ -112,7 +112,7 @@ function VelocityText({ children, baseVelocity = 100, numCopies = 6 }: VelocityT
 
 export const TechStackSection: React.FC = () => {
   return (
-    <section id="skills" className="relative py-20 px-4 md:px-8 max-w-6xl mx-auto border-t border-slate-800/80">
+    <section id="skills" className="relative py-20 px-4 md:px-8 max-w-6xl mx-auto border-t border-slate-800/80 gpu-layer">
       {/* Section Header */}
       <div className="text-center max-w-xl mx-auto space-y-3 mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono text-gray-300">
@@ -128,7 +128,7 @@ export const TechStackSection: React.FC = () => {
       </div>
 
       {/* Velocity Scroll Rows Container */}
-      <div className="relative max-w-5xl mx-auto space-y-6 overflow-hidden">
+      <div className="relative max-w-5xl mx-auto space-y-6 overflow-hidden gpu-layer">
         {/* Left Blur Mask */}
         <div
           className="pointer-events-none absolute left-0 top-0 h-full w-20 z-10"

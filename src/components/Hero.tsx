@@ -16,7 +16,6 @@ export const Hero: React.FC = () => {
 
   useEffect(() => {
     const removeSplineLogo = () => {
-      // 1. Remove by href
       const links = document.querySelectorAll('a[href*="spline.design"], a[href*="spline"]');
       links.forEach((link) => {
         const parent = link.parentElement;
@@ -27,23 +26,30 @@ export const Hero: React.FC = () => {
         }
       });
 
-      // 2. Remove by text content
-      const allElements = document.body.getElementsByTagName('*');
-      for (let i = 0; i < allElements.length; i++) {
-        const el = allElements[i] as HTMLElement;
-        if (el.innerText && el.innerText.trim() === 'Built with Spline') {
-          el.remove();
-        }
-      }
+      const watermark = document.querySelector('.spline-watermark, #spline-logo');
+      if (watermark) watermark.remove();
     };
 
     removeSplineLogo();
-    const interval = setInterval(removeSplineLogo, 100);
-    return () => clearInterval(interval);
+    const t1 = setTimeout(removeSplineLogo, 500);
+    const t2 = setTimeout(removeSplineLogo, 1500);
+    const t3 = setTimeout(removeSplineLogo, 3000);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
   }, []);
 
   const handleSplineLoad = (app: Application) => {
     try {
+      // Clamp pixel ratio for 60fps+ rendering on Retina/high-DPI screens
+      const renderer = (app as unknown as { _renderer?: { setPixelRatio?: (n: number) => void } })._renderer;
+      if (renderer?.setPixelRatio) {
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      }
+
       const allObjs = app.getAllObjects();
       allObjs.forEach((obj) => {
         if (obj.name && (obj.name.toLowerCase().includes("nazbot") || obj.name.toLowerCase().includes("text"))) {
@@ -62,7 +68,7 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative w-full h-screen overflow-hidden bg-black">
+    <section className="relative w-full h-screen overflow-hidden bg-black gpu-layer">
       {/* 1. Spline Background (Ashif Elahi Interactive 3D Robot) */}
       <div className="absolute inset-0 z-10 w-full h-full">
         <Suspense fallback={<div className="w-full h-full bg-slate-950/80" />}>
@@ -76,7 +82,7 @@ export const Hero: React.FC = () => {
 
       {/* 2. Overlay Content (Aligned to Center - Ashif Elahi Style) */}
       <div className="relative z-20 flex items-center justify-center w-full h-full p-4 sm:p-8 md:p-16 text-center bg-black/20 pointer-events-none">
-        <div className="max-w-3xl w-full pointer-events-auto">
+        <div className="max-w-3xl w-full pointer-events-auto gpu-layer">
           {/* Main Headline with WordRotate */}
           <h1 className="flex flex-wrap items-center justify-center gap-x-3 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold text-white [text-shadow:_0_3px_5px_rgb(0_0_0_/_50%)] tracking-tight">
             <WordRotate words={greetings} className="text-white" />
